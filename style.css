@@ -2,10 +2,14 @@ body {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-color: black;
+   
     margin: 0rem;
     overflow: hidden;
+    #grad {
+      background-image: linear-gradient(red, yellow);
+    }
   }
+
   
   h1 {
     font-family: 'Space Mono', monospace;
