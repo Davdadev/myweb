@@ -2,7 +2,7 @@ body {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-image: radial-gradient(red);
+    background-blend-mode: darken;
     margin: 0rem;
     overflow: hidden;
   
