@@ -2,7 +2,7 @@ body {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-color: black;
+    background-image: linear-gradient(black red);
     margin: 0rem;
     overflow: hidden;
   
