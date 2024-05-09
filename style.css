@@ -9,7 +9,7 @@ body {
     background-image: -webkit-linear-gradient(black,white);
     
     margin: 0rem;
-    overflow: hidden;
+    overflow: scroll;
   
   }
 
