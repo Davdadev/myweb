@@ -6,7 +6,7 @@ body {
     display: grid;
     place-items: center;
     height: 100vh;
-    background-image: -webkit-linear-gradient(black,white);
+    background-image: -webkit-linear-gradient(black,black);
     
     margin: 0rem;
     overflow: scroll;
