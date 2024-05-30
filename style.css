@@ -23,7 +23,7 @@ body {
   
   h1:hover {
     background-color: white;
-    color: black;
+    color: black !important;
   }
  .footer-basic {
   padding:10px 0;
