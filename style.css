@@ -15,8 +15,8 @@ body {
   
   h1 {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(3rem, 10vw, 10rem);
-    color: green !important;
+    font-size: clamp(4rem, 11vw, 11rem);
+    color: rgb(255, 254, 254) !important;
     padding: 0rem clamp(1rem, 2vw, 3rem);
     border-radius: clamp(0.4rem, 0.75vw, 1rem);
   }
