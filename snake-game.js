@@ -1,5 +1,17 @@
 const { useState, useEffect, useCallback } = React;
 
+const SnakeSegment = ({ x, y, color }) => (
+  <div
+    className="snake-segment"
+    style={{
+      left: `${x * 20}px`,
+      top: `${y * 20}px`,
+      backgroundColor: color,
+      borderRadius: '50%',
+    }}
+  />
+);
+
 const App = () => {
   const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
@@ -8,6 +20,7 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [started, setStarted] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [color, setColor] = useState('green');
 
   const handleKeyDown = useCallback((e) => {
     if (!started || gameOver) return;
@@ -119,18 +132,24 @@ const App = () => {
           <button onClick={handleStartGame} className="button">
             Start Game
           </button>
+          <div>
+            <label>Choose Snake Color: </label>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
+          </div>
         </div>
       ) : (
         <div className="game-container">
           <div className="absolute top-0 left-0 p-2">Score: {score}</div>
           {snake.map((segment, index) => (
-            <div
+            <SnakeSegment
               key={index}
-              className="snake-segment"
-              style={{
-                left: `${segment.x * 20}px`,
-                top: `${segment.y * 20}px`,
-              }}
+              x={segment.x}
+              y={segment.y}
+              color={color}
             />
           ))}
           <div
