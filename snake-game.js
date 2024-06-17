@@ -116,38 +116,34 @@ const App = () => {
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
       {!started ? (
         <div>
-          <button onClick={handleStartGame} className="bg-blue-500 text-white py-2 px-4 rounded">
+          <button onClick={handleStartGame} className="button">
             Start Game
           </button>
         </div>
       ) : (
-        <div className="relative w-80 h-80 bg-white border-4 border-black">
+        <div className="game-container">
           <div className="absolute top-0 left-0 p-2">Score: {score}</div>
           {snake.map((segment, index) => (
             <div
               key={index}
-              className="absolute bg-green-500"
+              className="snake-segment"
               style={{
-                width: '20px',
-                height: '20px',
                 left: `${segment.x * 20}px`,
                 top: `${segment.y * 20}px`,
               }}
             />
           ))}
           <div
-            className="absolute bg-red-500"
+            className="food"
             style={{
-              width: '20px',
-              height: '20px',
               left: `${food.x * 20}px`,
               top: `${food.y * 20}px`,
             }}
           />
           {gameOver && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-75">
+            <div className="overlay">
               <div className="text-2xl text-red-500 mb-4">Game Over</div>
-              <button onClick={handleRestartGame} className="bg-blue-500 text-white py-2 px-4 rounded">
+              <button onClick={handleRestartGame} className="button">
                 Restart Game
               </button>
             </div>
