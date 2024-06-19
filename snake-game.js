@@ -1,77 +1,141 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+const startScreen = document.getElementById('start-screen');
+const endScreen = document.getElementById('end-screen');
+const startButton = document.getElementById('start-button');
+const restartButton = document.getElementById('restart-button');
+const scoreDisplay = document.getElementById('score');
+const snakeColorInput = document.getElementById('snake-color');
+const levelSelect = document.getElementById('level');
+const upgradeButton = document.getElementById('upgrade-button');
+const paymentModal = document.getElementById('payment-modal');
+const paymentForm = document.getElementById('payment-form');
+const cardNumberInput = document.getElementById('card-number');
+const expiryInput = document.getElementById('expiry');
+const cvvInput = document.getElementById('cvv');
+const modalClose = document.querySelector('.close');
 
-const App = () => {
-  const [started, setStarted] = useState(false);
-  const [color, setColor] = useState('#000000'); // Default color
-  const [snake, setSnake] = useState([]); // State for snake segments
-  const [food, setFood] = useState({ x: 0, y: 0 }); // State for food position
-  const [score, setScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+let snake;
+let food;
+let direction;
+let score;
+let gameLoop;
+let snakeColor;
+let canvasSize;
+let isSnakeGold = false;
 
-  const handleStartGame = () => {
-    // Implement game start logic
-    setStarted(true);
-  };
+function initGame() {
+    const level = parseInt(levelSelect.value);
+    setCanvasSize(level);
+    
+    snake = [{ x: canvas.width / 2, y: canvas.height / 2 }];
+    direction = { x: 10, y: 0 }; // Initial direction
+    score = 0;
+    placeFood();
+    snakeColor = snakeColorInput.value;
+    document.addEventListener('keydown', changeDirection);
+    gameLoop = setInterval(update, 100);
+    startScreen.classList.remove('active');
+    endScreen.classList.remove('active');
+    canvas.style.display = 'block';
+    console.log('Game initialized');
+}
 
-  const handleRestartGame = () => {
-    // Implement game restart logic
-    setStarted(false);
-    setSnake([]);
-    setFood({ x: 0, y: 0 });
-    setScore(0);
-    setGameOver(false);
-  };
+function setCanvasSize(level) {
+    switch (level) {
+        case 1:
+            canvasSize = 400; // Small canvas
+            break;
+        case 2:
+            canvasSize = 600; // Medium canvas
+            break;
+        case 3:
+            canvasSize = 800; // Large canvas
+            break;
+        default:
+            canvasSize = 400; // Default to small canvas
+            break;
+    }
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+}
 
-  return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      {!started ? (
-        <div>
-          <button onClick={handleStartGame} className="button">
-            Start Game
-          </button>
-          <div>
-            <label>Choose Snake Color: </label>
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-          </div>
-        </div>
-      ) : (
-        <div className="game-container">
-          <div className="absolute top-0 left-0 p-2">Score: {score}</div>
-          {snake.map((segment, index) => (
-            <div
-              key={index}
-              className="snake-segment"
-              style={{
-                left: `${segment.x * 20}px`,
-                top: `${segment.y * 20}px`,
-                backgroundColor: color,
-              }}
-            />
-          ))}
-          <div
-            className="food"
-            style={{
-              left: `${food.x * 20}px`,
-              top: `${food.y * 20}px`,
-            }}
-          />
-          {gameOver && (
-            <div className="overlay">
-              <div className="text-2xl text-red-500 mb-4">Game Over</div>
-              <button onClick={handleRestartGame} className="button">
-                Restart Game
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
-};
+function placeFood() {
+    food = {
+        x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
+        y: Math.floor(Math.random() * (canvas.height / 10)) * 10
+    };
+    console.log('Food placed at:', food);
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+function update() {
+    const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+    if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
+        endGame();
+        return;
+    }
+
+    snake.unshift(head);
+
+    if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        placeFood();
+    } else {
+        snake.pop();
+    }
+
+    draw();
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw food
+    ctx.fillStyle = 'red';
+    ctx.fillRect(food.x, food.y, 10, 10);
+
+    // Draw snake
+    ctx.fillStyle = snakeColor;
+    snake.forEach(segment => {
+        ctx.fillRect(segment.x, segment.y, 10, 10);
+    });
+    console.log('Snake drawn:', snake);
+}
+
+function changeDirection(event) {
+    const keyPressed = event.keyCode;
+    const goingUp = direction.y === -10;
+    const goingDown = direction.y === 10;
+    const goingRight = direction.x === 10;
+    const goingLeft = direction.x === -10;
+
+    if (keyPressed === 37 && !goingRight) { // left arrow
+        direction = { x: -10, y: 0 };
+    }
+    if (keyPressed === 38 && !goingDown) { // up arrow
+        direction = { x: 0, y: -10 };
+    }
+    if (keyPressed === 39 && !goingLeft) { // right arrow
+        direction = { x: 10, y: 0 };
+    }
+    if (keyPressed === 40 && !goingUp) { // down arrow
+        direction = { x: 0, y: 10 };
+    }
+}
+
+function endGame() {
+    clearInterval(gameLoop);
+    document.removeEventListener('keydown', changeDirection);
+    endScreen.classList.add('active');
+    scoreDisplay.textContent = `Score: ${score}`;
+    console.log('Game over');
+}
+
+startButton.addEventListener('click', () => {
+    initGame();
+});
+
+restartButton.addEventListener('click', () => {
+    initGame();
+});
