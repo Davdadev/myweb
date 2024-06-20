@@ -7,13 +7,6 @@ const restartButton = document.getElementById('restart-button');
 const scoreDisplay = document.getElementById('score');
 const snakeColorInput = document.getElementById('snake-color');
 const levelSelect = document.getElementById('level');
-const upgradeButton = document.getElementById('upgrade-button');
-const paymentModal = document.getElementById('payment-modal');
-const paymentForm = document.getElementById('payment-form');
-const cardNumberInput = document.getElementById('card-number');
-const expiryInput = document.getElementById('expiry');
-const cvvInput = document.getElementById('cvv');
-const modalClose = document.querySelector('.close');
 
 let snake;
 let food;
@@ -22,38 +15,41 @@ let score;
 let gameLoop;
 let snakeColor;
 let canvasSize;
-let isSnakeGold = false;
+let isPaused = false;
 
 function initGame() {
-    const level = parseInt(levelSelect.value);
-    setCanvasSize(level);
-    
-    snake = [{ x: canvas.width / 2, y: canvas.height / 2 }];
-    direction = { x: 10, y: 0 }; // Initial direction
-    score = 0;
+    resetGameVariables();
+    setCanvasSize(parseInt(levelSelect.value));
     placeFood();
-    snakeColor = snakeColorInput.value;
-    document.addEventListener('keydown', changeDirection);
-    gameLoop = setInterval(update, 100);
+    draw();
     startScreen.classList.remove('active');
     endScreen.classList.remove('active');
     canvas.style.display = 'block';
-    console.log('Game initialized');
+    document.addEventListener('keydown', handleKeydown);
+    gameLoop = setInterval(update, 100);
+}
+
+function resetGameVariables() {
+    snake = [{ x: canvas.width / 2, y: canvas.height / 2 }];
+    direction = { x: 10, y: 0 };
+    score = 0;
+    snakeColor = snakeColorInput.value;
+    isPaused = false;
 }
 
 function setCanvasSize(level) {
     switch (level) {
         case 1:
-            canvasSize = 400; // Small canvas
+            canvasSize = 400;
             break;
         case 2:
-            canvasSize = 600; // Medium canvas
+            canvasSize = 600;
             break;
         case 3:
-            canvasSize = 800; // Large canvas
+            canvasSize = 800;
             break;
         default:
-            canvasSize = 400; // Default to small canvas
+            canvasSize = 400;
             break;
     }
     canvas.width = canvasSize;
@@ -65,10 +61,11 @@ function placeFood() {
         x: Math.floor(Math.random() * (canvas.width / 10)) * 10,
         y: Math.floor(Math.random() * (canvas.height / 10)) * 10
     };
-    console.log('Food placed at:', food);
 }
 
 function update() {
+    if (isPaused) return;
+
     const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
     if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height || snake.some(segment => segment.x === head.x && segment.y === head.y)) {
@@ -91,51 +88,41 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw food
     ctx.fillStyle = 'red';
     ctx.fillRect(food.x, food.y, 10, 10);
 
-    // Draw snake
     ctx.fillStyle = snakeColor;
-    snake.forEach(segment => {
-        ctx.fillRect(segment.x, segment.y, 10, 10);
-    });
-    console.log('Snake drawn:', snake);
+    snake.forEach(segment => ctx.fillRect(segment.x, segment.y, 10, 10));
 }
 
-function changeDirection(event) {
+function handleKeydown(event) {
+    if (event.keyCode === 32) { // Space key for pause/resume
+        togglePause();
+        return;
+    }
+
     const keyPressed = event.keyCode;
     const goingUp = direction.y === -10;
     const goingDown = direction.y === 10;
     const goingRight = direction.x === 10;
     const goingLeft = direction.x === -10;
 
-    if (keyPressed === 37 && !goingRight) { // left arrow
-        direction = { x: -10, y: 0 };
-    }
-    if (keyPressed === 38 && !goingDown) { // up arrow
-        direction = { x: 0, y: -10 };
-    }
-    if (keyPressed === 39 && !goingLeft) { // right arrow
-        direction = { x: 10, y: 0 };
-    }
-    if (keyPressed === 40 && !goingUp) { // down arrow
-        direction = { x: 0, y: 10 };
-    }
+    if (keyPressed === 37 && !goingRight) { direction = { x: -10, y: 0 }; }
+    if (keyPressed === 38 && !goingDown) { direction = { x: 0, y: -10 }; }
+    if (keyPressed === 39 && !goingLeft) { direction = { x: 10, y: 0 }; }
+    if (keyPressed === 40 && !goingUp) { direction = { x: 0, y: 10 }; }
+}
+
+function togglePause() {
+    isPaused = !isPaused;
 }
 
 function endGame() {
     clearInterval(gameLoop);
-    document.removeEventListener('keydown', changeDirection);
+    document.removeEventListener('keydown', handleKeydown);
     endScreen.classList.add('active');
     scoreDisplay.textContent = `Score: ${score}`;
-    console.log('Game over');
 }
 
-startButton.addEventListener('click', () => {
-    initGame();
-});
-
-restartButton.addEventListener('click', () => {
-    initGame();
-});
+startButton.addEventListener('click', initGame);
+restartButton.addEventListener('click', initGame);
