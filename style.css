@@ -1,19 +1,4 @@
-body {
-
-  
-    display: grid;
-    place-items: center;
-    height: 100vh;
-    background-image: -webkit-linear-gradient(black,black);
-    
-    margin: 0rem;
-    overflow: scroll;
-    color: green;
-  
-  }
-
-  
- @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;500&display=swap');
 
 * {
   margin: 0;
@@ -23,13 +8,14 @@ body {
 body {
   background: #282c34;
   font-size: 2vmin;
-  font-family: JetBrains Mono, monospace;
+  font-family: 'JetBrains Mono', monospace;
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
   color: #e4bb68;
+  overflow: scroll;
 }
 
 .string {
@@ -81,74 +67,74 @@ body {
 
 @keyframes move {
   25% {
-    transform: translatey(-5.8vmin);
+    transform: translateY(-5.8vmin);
     opacity: 1;
   }
   50% {
-    transform: translatey(-11vmin);
+    transform: translateY(-11vmin);
   }
   75% {
-    transform: translatey(-16.5vmin);
+    transform: translateY(-16.5vmin);
   }
 }
- .footer-basic {
-  padding:10px 0;
-  
-  color:#ffff;
+
+.footer-basic {
+  padding: 10px 0;
+  color: #fff;
+  background: #282c34;
 }
 
 .footer-basic ul {
-  padding:0;
-  list-style:none;
-  text-align:center;
-  font-size:18px;
-  line-height:1.6;
-  margin-bottom:1;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 1rem;
 }
 
 .footer-basic li {
-  padding:0 10px;
+  padding: 0 10px;
 }
 
 .footer-basic ul a {
   color: white;
-  text-decoraton:none;
-  opacity:0.8;
+  text-decoration: none;
+  opacity: 0.8;
 }
 
 .footer-basic ul a:hover {
-  opacity:1;
+  opacity: 1;
 }
 
 .footer-basic .social {
-  text-align:center;
-  padding-bottom:20px;
+  text-align: center;
+  padding-bottom: 20px;
 }
 
 .footer-basic .social > a {
-  font-size:30px;
-  width:40px;
-  height:1px;
-  line-height:40px;
-  display:inline-block;
-  text-align:center;
-  border-radius:50%;
-  border:0px solid #ccc;
-  margin:0 9px;
-  color:white;
-  opacity:1;
+  font-size: 30px;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+  text-align: center;
+  border-radius: 50%;
+  border: 0px solid #ccc;
+  margin: 0 9px;
+  color: white;
+  opacity: 1;
 }
 
 .footer-basic .social > a:hover {
-  opacity:0.9;
+  opacity: 0.9;
 }
 
 .footer-basic .copyright {
-  margin-top:1px;
-  text-align:center;
-  font-size:13px;
-  color:#aaa;
-  margin-bottom:0;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 13px;
+  color: #aaa;
+  margin-bottom: 0;
 }
 
-/* Credit to 
